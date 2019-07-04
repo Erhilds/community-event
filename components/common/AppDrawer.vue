@@ -59,7 +59,12 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['setDrawer'])
+    ...mapMutations(['setDrawer']),
+    onClick(e, item) {
+      e.stopPropagation()
+      if (item.to || !item.href) return
+      this.$vuetify.goTo(item.href)
+    }
   }
 }
 </script>
