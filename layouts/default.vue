@@ -2,7 +2,9 @@
   <v-app>
     <v-content class="pa-0 ma-0">
       <app-toolbar />
-      <app-drawer />
+      <no-ssr>
+        <app-drawer />
+      </no-ssr>
       <nuxt />
       <app-footer />
     </v-content>
