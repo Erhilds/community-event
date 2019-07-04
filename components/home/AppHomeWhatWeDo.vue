@@ -44,13 +44,11 @@
 </template>
 
 <script>
-import whatWeDoData from '~/assets/data/whatWeDoComponentData.json'
 import ChapterDetails from '~/assets/data/chapterDetails.json'
 export default {
   data() {
     return {
-      chapterDetails: ChapterDetails,
-      whatWeDoData: whatWeDoData
+      chapterDetails: ChapterDetails
     }
   },
   methods: {
