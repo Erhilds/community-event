@@ -84,19 +84,19 @@
           <v-card-title class="mb-0">
             <div>
               <p class="google-font mb-0" style="font-size:130%">
-                {{ item.name | summery(25) }}
+                {{ item.fields.title | summery(25) }}
               </p>
               <p class="google-font mt-1 mb-0" style="font-size:110%">
                 <v-icon small>insert_invitation</v-icon>
-                {{ item.local_date | dateFilter }}
+                {{ item.fields.date | dateFilter }}
               </p>
               <p class="google-font mt-0 mb-0" style="font-size:110%">
                 <v-icon small>watch_later</v-icon>
-                {{ item.local_time }}
+                {{ item.fields.date }}
               </p>
               <p class="google-font mt-0 mb-0" style="font-size:110%">
                 <v-icon small>map</v-icon>
-                {{ item.venue.name | summery(30) }}
+                {{ item.fields.venue | summery(30) }}
               </p>
             </div>
           </v-card-title>
@@ -106,12 +106,12 @@
             <v-btn
               flat
               color="#4C4A78"
-              :href="item.link"
+              :href="item.fields.url"
               target="_blank"
               class="mb-0 ml-0 mt-0 google-font"
               style="border-radius:7px;text-transform: capitalize;"
-              >See More</v-btn
-            >
+              >See More
+            </v-btn>
           </v-card-actions>
         </v-card>
       </v-flex>
@@ -175,18 +175,18 @@
               <v-list-tile-avatar>
                 <v-avatar color="grey lighten-2">
                   <span class="google-font" style="width:100vh">{{
-                    getCharString(item.name)
+                    getCharString(item.fields.title)
                   }}</span>
                 </v-avatar>
               </v-list-tile-avatar>
 
               <v-list-tile-content>
                 <v-list-tile-title class="google-font">{{
-                  item.name
+                  item.fields.title
                 }}</v-list-tile-title>
                 <v-list-tile-sub-title class="google-font"
-                  >{{ item.local_date | dateFilter }} |
-                  {{ item.local_time }}</v-list-tile-sub-title
+                  >{{ item.fields.date | dateFilter }} |
+                  {{ item.fields.date }}</v-list-tile-sub-title
                 >
               </v-list-tile-content>
 
@@ -196,13 +196,13 @@
                     slot="activator"
                     icon
                     ripple
-                    :href="item.link"
+                    :href="item.fields.url"
                     target="_blank"
                   >
                     <v-icon color="grey darken-1">info</v-icon>
                   </v-btn>
 
-                  <span>See More about {{ item.name }}</span>
+                  <span>See More about {{ item.fields.url }}</span>
                 </v-tooltip>
               </v-list-tile-action>
             </v-list-tile>
@@ -220,7 +220,7 @@
 
 <script>
 import ChapterDetails from '~/assets/data/chapterDetails.json'
-import { MeetupAPI } from '~/assets/key'
+
 export default {
   filters: {
     summery: (val, num) => {
@@ -247,29 +247,7 @@ export default {
     }
   },
   created() {
-    fetch(
-      'https://cors-anywhere.herokuapp.com/https://api.meetup.com/' +
-        MeetupAPI.urlname +
-        '/events?desc=true&photo-host=public&page=4&status=past&key=' +
-        MeetupAPI.apiKey
-    )
-      .then(data => data.json())
-      .then(res => {
-        if (res.length > 0) {
-          this.showLoader = false
-          this.showData = true
-          this.eventsData = res
-        } else {
-          this.notFoundEventFlag = true
-          this.showLoader = false
-        }
-      })
-      .catch(e => {
-        this.showLoader = false
-        this.errorMsg = 'Issue found with ' + e
-        this.errorAlert = true
-        this.notFoundEventFlag = true
-      })
+    this.getEvents()
   },
   methods: {
     getCharString(data) {
@@ -282,6 +260,31 @@ export default {
         ).toUpperCase()
       } else {
         return splitArr[0].substring(0, 1).toUpperCase()
+      }
+    },
+    async getEvents() {
+      try {
+        const result = await this.$axios.$get(
+          'http://airtable-events.herokuapp.com/public/event'
+        )
+        console.log('getEvents', result.records)
+        if (result.records.length >= 0) {
+          this.showLoader = false
+          this.showData = true
+          this.eventsData = result.records
+          console.log('events data > 0', this.eventsData)
+        } else {
+          this.notFoundEventFlag = true
+          this.showLoader = false
+          this.eventsData = result.records
+          console.log('events data else', this.eventsData)
+        }
+      } catch (error) {
+        this.showLoader = false
+        this.errorMsg = 'Issue found with ' + error
+        this.errorAlert = true
+        this.notFoundEventFlag = true
+        console.log('events data', this.eventsData)
       }
     }
   }
