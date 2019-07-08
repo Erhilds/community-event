@@ -267,24 +267,21 @@ export default {
         const result = await this.$axios.$get(
           'http://airtable-events.herokuapp.com/public/event'
         )
-        console.log('getEvents', result.records)
         if (result.records.length >= 0) {
           this.showLoader = false
           this.showData = true
           this.eventsData = result.records
-          console.log('events data > 0', this.eventsData)
         } else {
           this.notFoundEventFlag = true
           this.showLoader = false
           this.eventsData = result.records
-          console.log('events data else', this.eventsData)
         }
       } catch (error) {
         this.showLoader = false
         this.errorMsg = 'Issue found with ' + error
         this.errorAlert = true
         this.notFoundEventFlag = true
-        console.log('events data', this.eventsData)
+        console.log('[getEvents]', this.eventsData)
       }
     }
   }
