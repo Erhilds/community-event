@@ -1,18 +1,28 @@
 [
     {
-        "name":"GDG",
-        "link":"https://developers.google.com/groups",
-        "img":"gdglogo.png"
+      "name":"SurabayaDev",
+      "link":"http://surabayadev.org/",
+      "img":"surabayadev.png"
     },
     {
-        "name":"WomenTechmakers",
-        "link":"https://www.womentechmakers.com/",
-        "img":"wtm.png"
+      "name":"surabaya.py",
+      "link":"https://github.com/surabaya-py",
+      "img":"surabayapy.png"
     },
     {
-        "name":"GDG[x]",
-        "link":"https://github.com/gdg-x",
-        "img":"gdg-x.svg"
+      "name":"KLAS",
+      "link":"https://github.com/gdg-x",
+      "img":"KLAS.png"
+    },
+    {
+      "name":"Surabaya.JS",
+      "link":"https://surabayajs.org/",
+      "img":"Gator.png"
+    },
+    {
+      "name":"Facebook DevC Surabaya",
+      "link":"https://github.com/gdg-x",
+      "img":"gdg-x.svg"
     }
 
 ]
