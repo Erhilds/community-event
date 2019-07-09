@@ -1,9 +1,10 @@
 {
-  "ChapterName":"Web Developer",
-  "ChapterShortDescription":"Eventarian is an initiative to focus efforts to disseminate information about events held by communities, especially in Surabaya",
-  "ChapterLongDec":"Web Developer Group Jalandhar is inspired by GTUG/GDG Family . We started our journey in Feb 2011. We try to engage student developers, fresh graduates and professionals through our hack events & meetups. The motive is to create a local ecosystem of programmers & hackers in and around Jalandhar. The technology awareness is main goal for first few years of the group.",
-  "ChapterEmail":"erickh.andreas@gmail.com",
+  "ChapterName":"Event-Surabaya",
+  "ChapterShortDescription":"Event-Surabaya is an initiative to focus efforts to disseminate information about events held by communities, especially in Surabaya",
+  "ChapterLongDec":"Event-Surabaya is an information service to display all events held by the developer community, especially in Surabaya. We try to involve student developers, new graduates, and professionals through our hacking & meeting events. Technology awareness is our main goal, the motive is to create a local ecosystem for programmers & hackers  around Surabaya. We hereby hope that the development of technology will be better known by developers in Surabaya.",
+  "ChapterEmail":"dummy_contact",
   "website":"",
+  "ChapterGithubLink": "https://github.com/Erhild/community-event",
   "ChapterHashTags":["SurabayaDev","KLAS","DeveloperCircleSurabaya","Surabaya.JS","Surabaya.py"],
   "socialLinks":[
     {
@@ -26,7 +27,5 @@
       "link" : "https://www.meetup.com/GDG-Jalandhar/",
       "icon" : "mdi-meetup"
     }
-  ],
-  "wtmWebsite":"https://www.womentechmakers.com/",
-  "aboutGDGProgram":"GDGs are local groups of developers who are specifically interested in Google products and APIs. Each local group is called a GDG chapter and can host a variety of technical activities for developers - from just a few people getting together to watch our latest videos, to large gatherings with demos and tech talks, to hackathons."
+  ]
 }
