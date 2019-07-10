@@ -21,8 +21,7 @@
         </p>
         <p class="google-font mt-0 mb-0" style="font-size:120%">
           Our events are open to newbies, developers, managers, and
-          organizations who are interested in Google's technologies or use them
-          as part of their projects.
+          organizations who are interested in empowering technology for .
         </p>
       </v-flex>
     </v-layout>
@@ -80,6 +79,7 @@
 
       <v-flex v-for="(item, i) in eventsData" :key="i" xs12 sm6 md4 lg4>
         <v-card
+          v-if="item.fields.status === '1'"
           flat
           class="ma-1 pa-1 my-0 elevation-0"
           style="border-radius:7px;border:1px #ddd solid"
@@ -87,24 +87,24 @@
           <v-card-title class="mb-0">
             <div>
               <p class="google-font mb-2" style="font-size:140%;color:#0277bd">
-                {{ item.name }}
+                {{ item.fields.title }}
               </p>
               <p class="google-font mt-2 mb-1">
                 <span style="font-size:110%">
-                  {{ $options.filters.summery(item.description, 180) }}
+                  {{ $options.filters.summery(item.fields.description, 180) }}
                 </span>
               </p>
               <p class="google-font mt-1 mb-0" style="font-size:110%">
                 <v-icon>insert_invitation</v-icon>
-                {{ item.local_date }}
+                {{ item.fields.date | dateFilter }}
               </p>
               <p class="google-font mt-1 mb-0" style="font-size:110%">
                 <v-icon>watch_later</v-icon>
-                {{ item.local_time }}
+                {{ item.fields.date | dateFilter }}
               </p>
               <p class="google-font mt-1 mb-0" style="font-size:110%">
                 <v-icon>map</v-icon>
-                {{ item.venue.name | summery(30) }}
+                {{ item.fields.venue | summery(30) }}
               </p>
             </div>
           </v-card-title>
@@ -114,7 +114,7 @@
             <v-btn
               flat
               color="#4C4A78"
-              :href="item.link"
+              :href="item.fields.url"
               target="_blank"
               class="mb-0 ml-0 mt-0 google-font"
               style="border-radius:7px;text-transform: capitalize;"
@@ -172,50 +172,54 @@
       </v-flex>
 
       <v-flex xs12>
-        <v-slide-y-reverse-transition>
-          <v-list v-show="showData" two-line subheader class="grey lighten-5">
-            <v-list-tile
-              v-for="(item, i) in eventsData"
-              :key="i"
-              avatar
-              style="border-color:#e0e0e0;border-width: 1px;border-style: solid;border-top:0; border-left:0; border-right:0; border-bottom:1"
-            >
-              <v-list-tile-avatar>
-                <v-avatar color="grey lighten-2">
-                  <span class="google-font" style="width:100vh">{{
-                    getCharString(item.name)
-                  }}</span>
-                </v-avatar>
-              </v-list-tile-avatar>
+        <v-list
+          v-for="(item, i) in eventsData"
+          v-show="showData"
+          :key="i"
+          two-line
+          subheader
+          class="grey lighten-5"
+        >
+          <v-list-tile
+            v-if="item.fields.status === '1'"
+            avatar
+            style="border-color:#e0e0e0;border-width: 1px;border-style: solid;border-top:0; border-left:0; border-right:0; border-bottom:1"
+          >
+            <v-list-tile-avatar>
+              <v-avatar color="grey lighten-2">
+                <span class="google-font" style="width:100vh">{{
+                  getCharString(item.fields.title)
+                }}</span>
+              </v-avatar>
+            </v-list-tile-avatar>
 
-              <v-list-tile-content>
-                <v-list-tile-title class="google-font">{{
-                  item.name
-                }}</v-list-tile-title>
-                <v-list-tile-sub-title class="google-font"
-                  >{{ item.local_date }} |
-                  {{ item.local_time }}</v-list-tile-sub-title
+            <v-list-tile-content>
+              <v-list-tile-title class="google-font">{{
+                item.fields.title
+              }}</v-list-tile-title>
+              <v-list-tile-sub-title class="google-font"
+                >{{ item.fields.date | dateFilter }} |
+                {{ item.fields.date }}</v-list-tile-sub-title
+              >
+            </v-list-tile-content>
+
+            <v-list-tile-action>
+              <v-tooltip bottom>
+                <v-btn
+                  slot="activator"
+                  icon
+                  ripple
+                  :href="item.fields.url"
+                  target="_blank"
                 >
-              </v-list-tile-content>
+                  <v-icon color="grey darken-1">info</v-icon>
+                </v-btn>
 
-              <v-list-tile-action>
-                <v-tooltip bottom>
-                  <v-btn
-                    slot="activator"
-                    icon
-                    ripple
-                    :href="item.link"
-                    target="_blank"
-                  >
-                    <v-icon color="grey darken-1">info</v-icon>
-                  </v-btn>
-
-                  <span>See More about {{ item.name }}</span>
-                </v-tooltip>
-              </v-list-tile-action>
-            </v-list-tile>
-          </v-list>
-        </v-slide-y-reverse-transition>
+                <span>See More about {{ item.fields.title }}</span>
+              </v-tooltip>
+            </v-list-tile-action>
+          </v-list-tile>
+        </v-list>
       </v-flex>
 
       <v-flex v-if="notFoundUpcomingEventFlag == true" xs12>
@@ -229,12 +233,19 @@
 
 <script>
 import ChapterDetails from '~/assets/data/chapterDetails.json'
-import { MeetupAPI } from '~/assets/key'
 
 export default {
   filters: {
     summery: (val, num) => {
       return val.substring(0, num) + '...'
+    },
+    dateFilter: value => {
+      const date = new Date(value)
+      return date.toLocaleString(['en-US'], {
+        month: 'short',
+        day: '2-digit',
+        year: 'numeric'
+      })
     }
   },
   data() {
@@ -249,29 +260,7 @@ export default {
     }
   },
   created() {
-    fetch(
-      'https://cors-anywhere.herokuapp.com/https://api.meetup.com/' +
-        MeetupAPI.urlname +
-        '/events?key=' +
-        MeetupAPI.apiKey
-    )
-      .then(data => data.json())
-      .then(res => {
-        if (res.length > 0) {
-          this.showLoader = false
-          this.showData = true
-          this.eventsData = res
-        } else {
-          this.showLoader = false
-          this.notFoundUpcomingEventFlag = true
-        }
-      })
-      .catch(e => {
-        this.showLoader = false
-        this.errorMsg = 'Issue found with ' + e
-        this.errorAlert = true
-        this.notFoundUpcomingEventFlag = true
-      })
+    this.getEventsData()
   },
   methods: {
     getCharString(data) {
@@ -284,6 +273,28 @@ export default {
         ).toUpperCase()
       } else {
         return splitArr[0].substring(0, 1).toUpperCase()
+      }
+    },
+    async getEventsData() {
+      try {
+        const result = await this.$axios.$get(
+          'http://airtable-events.herokuapp.com/public/event'
+        )
+        if (result.records.length > 0) {
+          this.showLoader = false
+          this.showData = true
+          this.eventsData = result.records
+        } else {
+          this.notFoundEventFlag = true
+          this.showLoader = false
+          this.eventsData = result.records
+        }
+      } catch (error) {
+        this.showLoader = false
+        this.errorMsg = 'Issue found with ' + error
+        this.errorAlert = true
+        this.notFoundEventFlag = true
+        console.log('[getEvents]', this.pastEvents)
       }
     }
   }

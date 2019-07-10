@@ -68,7 +68,13 @@
 
       <v-flex v-for="(item, i) in eventsData" :key="i" xs12 sm6 md4 lg4>
         <v-slide-y-reverse-transition>
-          <v-list v-show="showData" two-line subheader class="pa-2">
+          <v-list
+            v-show="showData"
+            v-if="item.fields.status === '0' || item.fields.status === '-1'"
+            two-line
+            subheader
+            class="pa-2"
+          >
             <v-list-tile
               avatar
               style="border-color:#e0e0e0;border-width: 1px;border-style: solid;border-top:0; border-left:0; border-right:0; border-bottom:1"
@@ -76,18 +82,18 @@
               <v-list-tile-avatar>
                 <v-avatar color="grey lighten-2">
                   <span class="google-font" style="width:100vh">{{
-                    getCharString(item.name)
+                    getCharString(item.fields.title)
                   }}</span>
                 </v-avatar>
               </v-list-tile-avatar>
 
               <v-list-tile-content>
                 <v-list-tile-title class="google-font" style="color:#424242">{{
-                  item.name
+                  item.fields.title
                 }}</v-list-tile-title>
                 <v-list-tile-sub-title class="google-font"
-                  >{{ item.local_date | dateFilter }} |
-                  {{ item.local_time }}</v-list-tile-sub-title
+                  >{{ item.fields.date | dateFilter }} |
+                  {{ item.fields.date }}</v-list-tile-sub-title
                 >
               </v-list-tile-content>
 
@@ -97,13 +103,13 @@
                     slot="activator"
                     icon
                     ripple
-                    :href="item.link"
+                    :href="item.fields"
                     target="_blank"
                   >
                     <v-icon color="grey darken-1">info</v-icon>
                   </v-btn>
 
-                  <span>See More about {{ item.name }}</span>
+                  <span>See More about {{ item.fields.title }}</span>
                 </v-tooltip>
               </v-list-tile-action>
             </v-list-tile>
@@ -122,7 +128,7 @@
 
 <script>
 import ChapterDetails from '~/assets/data/chapterDetails.json'
-import { MeetupAPI } from '~/assets/key'
+
 export default {
   filters: {
     summery: (val, num) => {
@@ -150,29 +156,7 @@ export default {
     }
   },
   created() {
-    fetch(
-      'https://cors-anywhere.herokuapp.com/https://api.meetup.com/' +
-        MeetupAPI.urlname +
-        '/events?desc=true&photo-host=public&page=8&status=past&key=' +
-        MeetupAPI.apiKey
-    )
-      .then(data => data.json())
-      .then(res => {
-        if (res.length > 0) {
-          this.showLoader = false
-          this.showData = true
-          this.eventsData = res
-        } else {
-          this.notFoundPastEventFlag = true
-          this.showLoader = false
-        }
-      })
-      .catch(e => {
-        this.showLoader = false
-        this.errorMsg = 'Issue found with ' + e
-        this.errorAlert = true
-        this.notFoundPastEventFlag = true
-      })
+    this.getEventsData()
   },
   methods: {
     getCharString(data) {
@@ -185,6 +169,28 @@ export default {
         ).toUpperCase()
       } else {
         return splitArr[0].substring(0, 1).toUpperCase()
+      }
+    },
+    async getEventsData() {
+      try {
+        const result = await this.$axios.$get(
+          'http://airtable-events.herokuapp.com/public/event'
+        )
+        if (result.records.length > 0) {
+          this.showLoader = false
+          this.showData = true
+          this.eventsData = result.records
+        } else {
+          this.notFoundEventFlag = true
+          this.showLoader = false
+          this.eventsData = result.records
+        }
+      } catch (error) {
+        this.showLoader = false
+        this.errorMsg = 'Issue found with ' + error
+        this.errorAlert = true
+        this.notFoundEventFlag = true
+        console.log('[getEvents]', this.pastEvents)
       }
     }
   }
