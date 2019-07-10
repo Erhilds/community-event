@@ -11,9 +11,9 @@ export default {
   head: {
     titleTemplate(title) {
       if (title) {
-        return `${title} - Web Developer`
+        return `${title} - Event-Surabaya`
       }
-      return 'Web Developer'
+      return 'Event-Surabaya'
     },
     meta: [
       { charset: 'utf-8' },
@@ -43,7 +43,10 @@ export default {
     // "@nuxtjs/sentry",
 
     // https://github.com/Developmint/nuxt-webfontloader
-    'nuxt-webfontloader'
+    'nuxt-webfontloader',
+
+    // https://github.com/nuxt-community/moment-module
+    '@nuxtjs/moment'
 
     // https://github.com/nuxt-community/analytics-module
     // [
