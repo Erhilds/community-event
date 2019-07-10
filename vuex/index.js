@@ -7,7 +7,6 @@ const state = () => ({
   items: [
     { text: 'Home', to: '/', icon: 'home' },
     { text: 'Events', to: '/events', icon: 'rounded_corner' },
-    { text: 'Team', to: '/team', icon: 'group' },
     { text: 'About', to: '/about', icon: 'toc' }
   ]
 })
